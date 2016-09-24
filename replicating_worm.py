@@ -126,7 +126,7 @@ print network
 if len(sys.argv) == 2:
 	if sys.argv[1] == "-host":
 		print("Will spread to only one of the nodes then to other")
-		network = "192.168.1.4"		#VM2
+		network = ["192.168.1.4"]		#VM2
 
 for Host in network:		
 
