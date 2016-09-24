@@ -6,7 +6,7 @@ import os.path
 import socket, fcntl, struct
 import netifaces
 
-markerLocation = "/tmp/marker.txt"
+markerLocation = "/tmp/replicate_marker.txt"
 
 wordList = [
 ('awesomeUserName', 'badPassword'),
