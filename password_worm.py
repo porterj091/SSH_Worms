@@ -147,9 +147,6 @@ else:
 	sendPasswords()
 
 
-
-print network
-
 for Host in network:		
 
 	print ("Trying host: " + Host)

